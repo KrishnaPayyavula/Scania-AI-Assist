@@ -1,5 +1,6 @@
 export interface QueryRequest {
   query: string;
+  model: ModelType;
 }
 
 export interface QueryResponse {
@@ -14,3 +15,7 @@ export interface ApiResponse<T> {
   data?: T;
   message?: string;
 }
+
+
+export type ModelType = 'gpt-4-mini' | 'gpt-4' | 'gpt-3.5-turbo' | 'gpt-4-turbo';
+

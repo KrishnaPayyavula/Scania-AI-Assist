@@ -9,4 +9,8 @@ router.post('/query', queryController.processQuery);
 // GET /api/queries - Get query history (optional additional endpoint)
 router.get('/queries', queryController.getQueryHistory);
 
+// If this file doesn't exist, create it and add this route
+router.get('/history', queryController.getQueryHistory);
+
+
 export default router;

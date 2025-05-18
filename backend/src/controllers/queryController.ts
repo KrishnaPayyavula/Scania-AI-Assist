@@ -1,46 +1,40 @@
 import { Request, Response } from 'express';
-import Query from '../models/query';
-import llmService from '../services/llmService';
+import { LLMService } from '../services/llmService';
+import { Query } from '../models/query';
 import logger from '../utils/logger';
+
+const llmService = new LLMService();
 
 export const processQuery = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { query } = req.body;
-
-    if (!query?.trim() || typeof query !== 'string') {
-      res.status(400).json({ 
-        success: false,
-        message: 'Query is required and must be a non-empty string' 
-      });
-      return;
-    }
-
-    if (query.length > 1000) {
-      res.status(400).json({ 
-        success: false,
-        message: 'Query exceeds maximum length of 1000 characters' 
-      });
-      return;
-    }
-
-    logger.info(`Processing query: ${query}`);
-    const response = await llmService.processQuery(query);
+    const { query, model } = req.body;
     
-    const queryRecord = await Query.create({
+    if (!query) {
+      res.status(400).json({ success: false, message: 'Query is required' });
+      return;
+    }
+    
+    // Process the query with the LLM service
+    const response = await llmService.processQuery(query, model);
+    
+    // Save the query and response to the database
+    const savedQuery = await Query.create({
       query,
       response,
+      model: model || 'default', // Store the model used
       timestamp: new Date()
     });
-
-    logger.info(`Query processed and saved with ID: ${queryRecord._id}`);
-
+    
+    logger.info(`Query processed and saved with ID: ${savedQuery.id}`);
+    
     res.status(200).json({
       success: true,
       data: {
-        id: queryRecord._id,
-        query,
-        response,
-        timestamp: queryRecord.timestamp
+        id: savedQuery.id,
+        query: savedQuery.query,
+        response: savedQuery.response,
+        model: savedQuery.model,
+        timestamp: savedQuery.timestamp
       }
     });
   } catch (error) {
