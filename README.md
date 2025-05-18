@@ -3,10 +3,6 @@
 An advanced AI-powered full-stack developer assistant designed for Scania engineering teams, offering multi-model support, comprehensive query history, and real-time responses through a modern interface. Built with Azure OpenAI integration and robust containerized architecture.
 
 
-## 🌐 Live Demo
-Try out the application:
-- Frontend: https://scania-ai-assist-1.onrender.com/
-- Backend API: https://scania-ai-assist.onrender.com/
 
 ## 🌐 Live Demo
 Experience the power of AI developer assistance:
