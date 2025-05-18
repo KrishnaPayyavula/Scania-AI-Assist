@@ -2,47 +2,69 @@ import { ObjectId } from 'mongodb';
 import { db } from '../config/database';
 import logger from '../utils/logger';
 
-export interface QueryDocument {
-  _id?: ObjectId;
+interface IQuery {
+  id?: string;
   query: string;
   response: string;
+  model?: string;
   timestamp: Date;
 }
 
-class Query {
-  private collection = db.collection<QueryDocument>('query-logs');
+export class Query {
+  id?: string;
+  query: string;
+  response: string;
+  model: string;
+  timestamp: Date;
 
-  async create(data: Omit<QueryDocument, '_id'>): Promise<QueryDocument> {
-    const result = await this.collection.insertOne({
-      ...data,
-      timestamp: new Date()
-    });
-
-    logger.info(`Query saved with ID: ${result.insertedId}`);
-    
-    const savedQuery = await this.collection.findOne({ _id: result.insertedId });
-    logger.info('Saved query document:', JSON.stringify(savedQuery, null, 2));
-
-    return {
-      _id: result.insertedId,
-      ...data
-    };
+  constructor(data: IQuery) {
+    this.id = data.id;
+    this.query = data.query;
+    this.response = data.response;
+    this.model = data.model || 'default';
+    this.timestamp = data.timestamp;
   }
 
-  async findAll(limit = 10): Promise<QueryDocument[]> {
-    const queries = await this.collection
-      .find()
-      .sort({ timestamp: -1 })
-      .limit(limit)
-      .toArray();
+  static async create(data: Omit<IQuery, 'id'>): Promise<Query> {
+    try {
+      const collection = db.collection('queries');
+      const result = await collection.insertOne({
+        query: data.query,
+        response: data.response,
+        model: data.model || 'default',
+        timestamp: data.timestamp
+      });
 
-    logger.info(`Retrieved ${queries.length} queries:`);
-    queries.forEach(query => {
-      logger.info(`ID: ${query._id}, Query: "${query.query.substring(0, 50)}..."`);
-    });
+      logger.info(`Created new query with ID: ${result.insertedId}`);
+      
+      return new Query({
+        id: result.insertedId.toString(),
+        ...data
+      });
+    } catch (error) {
+      logger.error('Error creating query:', error);
+      throw new Error('Failed to create query');
+    }
+  }
 
-    return queries;
+  static async findAll(limit = 20): Promise<Query[]> {
+    try {
+      const collection = db.collection('queries');
+      const results = await collection.find({})
+        .sort({ timestamp: -1 })
+        .limit(limit)
+        .toArray();
+
+      return results.map(doc => new Query({
+        id: doc._id.toString(),
+        query: doc.query,
+        response: doc.response,
+        model: doc.model || 'default',
+        timestamp: doc.timestamp
+      }));
+    } catch (error) {
+      logger.error('Error finding queries:', error);
+      throw new Error('Failed to find queries');
+    }
   }
 }
-
-export default new Query();

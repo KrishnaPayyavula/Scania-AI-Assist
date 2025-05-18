@@ -1,131 +1,103 @@
 # Scania AI Developer Assistant
 
-An AI-powered full-stack developer assistant designed to support Scania engineering teams with instant, accurate answers to technical questions. Leveraging OpenAI's GPT models via Azure, this assistant provides a seamless natural language interface and ensures a consistent experience through containerized deployment.
+An advanced AI-powered full-stack developer assistant designed for Scania engineering teams, offering multi-model support, comprehensive query history, and real-time responses through a modern interface. Built with Azure OpenAI integration and robust containerized architecture.
 
----
 
-## 🚀 Features
+## 📸 Screenshots
 
-* 💬 **Natural Language Query Interface**
-  Ask development-related questions in plain English and get reliable responses.
+### Query Interface
+![Query Interface](./assets/scania_home_screen.png)
 
-* 🤖 **Powered by Azure OpenAI (GPT-4)**
-  Delivers intelligent and context-aware answers for various technical topics.
+### Model Selection
+<img src="./assets/scania_model_selection.png" width="800" alt="Model Selection Screen">
 
-* 📝 **Query History with MongoDB**
-  All queries and responses are persistently stored for reference and tracking.
+### Query History View
+<p align="center">
+  <img src="./assets/scania_chat_history.png" width="600" alt="Chat History"> 
+</p>
 
-* 🔒 **Containerized Architecture**
-  Docker ensures environment consistency across development and production.
+## 🎯 Key Features
 
-* 📊 **Robust Logging**
-  Application events and errors are logged using Winston for effective monitoring and debugging.
+* 🤖 **Multiple AI Model Support**
+  - GPT-4 Mini
+  - GPT-4
+  - GPT-3.5 Turbo
+  - GPT-4 Turbo
+  - Dynamic model selection for different use cases
 
----
+* 📝 **Enhanced Query System**
+  - Real-time query processing
+  - Interactive query form with model selection
+  - Detailed response tracking
+  - Loading states and error handling
 
-## 🧱 Technology Stack
+* 📚 **Comprehensive Query History**
+  - Chronological display of past queries
+  - Timestamps for each interaction
+  - Model-specific tracking
+  - Easy toggle between query and history views
+
+* 🎨 **Modern UI/UX**
+  - Glass-morphism design
+  - Responsive layout
+  - Interactive loading states
+  - Error feedback
+  - Clean component separation
+
+## 🛠 Technology Stack
 
 ### Frontend
-
 * React 19 with TypeScript
-* Axios for HTTP requests
-* Responsive UI with modern design patterns
+* Modern component architecture
+* State management for real-time updates
+* Axios for API communication
+* Responsive styling with glass-morphism
 
 ### Backend
-
 * Express.js with TypeScript
-* MongoDB Atlas for data storage
-* Winston for centralized logging
-* Azure OpenAI SDK for GPT integration
+* MongoDB Atlas integration
+* Azure OpenAI SDK with multi-model support
+* Winston logging system
+* RESTful API architecture
 
-### Infrastructure
-
-* Docker & Docker Compose for container orchestration
-* Secure environment management via `.env` files
-
----
-
-## ⚙️ Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
+* Docker & Docker Compose
+* Azure OpenAI Service API Key
+* MongoDB Atlas account
 
-* [Docker](https://www.docker.com/get-started) & [Docker Compose](https://docs.docker.com/compose/install/)
-* [Azure OpenAI Service](https://azure.microsoft.com/en-us/products/cognitive-services/openai-service) API Key
-* [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) account and cluster
-
----
-
-### Installation & Configuration
-
-1. **Clone the Repository**
-
-   ```bash
-   git clone https://github.com/yourusername/scania-ai-assist.git
-   cd scania-ai-assist
-   ```
-
-2. **Configure Environment Variables**
-   Create and edit the `.env`  file with your credentials:
-
-   ```bash
-# Azure OpenAI
+### Environment Setup
+Create a `.env` file with:
+```bash
 AZURE_OPENAI_ENDPOINT=your_azure_endpoint
 AZURE_OPENAI_API_KEY=your_azure_api_key
 AZURE_OPENAI_DEPLOYMENT_NAME=your_deployment_name
-
-# MongoDB
 MONGODB_USERNAME=your_mongodb_username
 MONGODB_PASSWORD=your_mongodb_password
-   ```
+```
 
----
-
-### 🐳 Running the Application (Recommended with Docker)
-
+### Launch Application
 ```bash
 docker-compose up --build
 ```
 
-Access the application at: [http://localhost:3000](http://localhost:3000)
-
----
-
-### 🔧 For Development
-
-#### Frontend
-
-```bash
-cd frontend
-npm install
-npm start
-```
-
-#### Backend
-
-```bash
-cd backend
-npm install
-npm run dev
-```
-
----
+Access at: http://localhost:3000
 
 ## 📡 API Endpoints
 
-### **POST /api/query**
+### POST /api/query
+Submit a developer query with model selection.
 
-Submit a developer query.
-
-**Request:**
-
+Request:
 ```json
 {
-  "query": "How do I implement async/await in TypeScript?"
+  "query": "How do I implement async/await in TypeScript?",
+  "model": "gpt-4"
 }
 ```
 
-**Response:**
-
+Response:
 ```json
 {
   "success": true,
@@ -133,61 +105,61 @@ Submit a developer query.
     "id": "507f1f77bcf86cd799439011",
     "query": "How do I implement async/await in TypeScript?",
     "response": "Here's how to use async/await...",
+    "model": "gpt-4",
     "timestamp": "2024-02-15T10:30:15.123Z"
   }
 }
 ```
 
----
+### GET /api/queries
+Retrieve query history with model information.
 
-### **GET /api/queries**
-
-Retrieve past queries and responses.
-
-**Response:**
-
-```json
-{
-  "success": true,
-  "data": [
-    {
-      "id": "507f1f77bcf86cd799439011",
-      "query": "How do I implement async/await in TypeScript?",
-      "response": "Here's how to use async/await...",
-      "timestamp": "2024-02-15T10:30:15.123Z"
-    }
-  ]
-}
-```
-
----
-
-## 🗂 Project Structure
-
+## 📂 Project Structure
 ```
 scania-ai-assist/
-├── frontend/                # React TypeScript frontend
-│   ├── src/
-│   │   ├── components/      # UI components
-│   │   ├── services/        # API service layer
-│   │   └── types/           # TypeScript interfaces
-│   └── Dockerfile
+├── .env                       # Environment variables (gitignored)
+├── .env.example               # Example environment variables
+├── .gitignore                 # Git ignore file
+├── docker-compose.yml         # Docker compose configuration
+├── README.md                  # Project documentation
 │
-├── backend/                 # Express TypeScript backend
-│   ├── src/
-│   │   ├── config/          # Configurations (env, DB)
-│   │   ├── controllers/     # Route handlers
-│   │   ├── models/          # Mongoose schemas
-│   │   ├── services/        # OpenAI logic
-│   │   └── utils/           # Utility functions
-│   └── Dockerfile
+├── backend/                   # Backend Express application
+│   ├── Dockerfile             # Backend Docker configuration
+│   ├── package.json           # Backend dependencies
+│   ├── tsconfig.json          # TypeScript configuration
+│   └── src/
+│       ├── index.ts           # Entry point
+│       ├── app.ts             # Express app setup
+│       ├── config/            # Configuration files
+│       │   ├── database.ts    # Database configuration
+│       │   └── env.ts         # Environment variables
+│       ├── controllers/       # API controllers
+│       │   └── queryController.ts
+│       ├── models/            # Database models
+│       │   └── query.ts
+│       ├── routes/            # API routes
+│       │   └── queryRoutes.ts
+│       ├── services/          # Business logic
+│       │   └── llmService.ts
+│       └── utils/             # Utility functions
+│           └── logger.ts      # Logging utility
 │
-└── docker-compose.yml       # Docker orchestration
+└── frontend/                  # Frontend React application
+    ├── Dockerfile             # Frontend Docker configuration
+    ├── package.json           # Frontend dependencies
+    ├── tsconfig.json          # TypeScript configuration
+    ├── public/                # Public assets
+    └── src/
+        ├── App.tsx            # Main application component
+        ├── index.tsx          # Entry point
+        ├── components/        # React components
+        │   ├── QueryForm.tsx  # Form for submitting queries
+        │   └── ResponseArea.tsx # Display for assistant responses
+        ├── services/          # Frontend services
+        │   └── api.ts         # API communication
+        └── types/             # TypeScript type definitions
+            └── index.ts
 ```
 
----
-
 ## 📄 License
-
 This project is licensed under the [GNU General Public License v3.0](LICENSE).
-

@@ -1,9 +1,8 @@
-
-import { AzureOpenAI } from "openai";
+import { AzureOpenAI } from 'openai';
 import { env } from '../config/env';
 import logger from '../utils/logger';
 
-class LLMService {
+export class LLMService {
   private client: AzureOpenAI;
 
   constructor() {
@@ -18,14 +17,15 @@ class LLMService {
   /**
    * Process a developer query using Azure OpenAI
    * @param query The user's query
+   * @param model The model to use for the query
    * @returns The LLM response
    */
-  async processQuery(query: string): Promise<string> {
+  async processQuery(query: string, model?: string): Promise<string> {
     try {
-      logger.info(`Processing query: ${query}`);
+      logger.info(`Processing query with model ${model || env.AZURE_OPENAI_DEPLOYMENT_NAME}: ${query}`);
 
       const result = await this.client.chat.completions.create({
-        model: env.AZURE_OPENAI_DEPLOYMENT_NAME,  // Add the required model parameter
+        model: model || env.AZURE_OPENAI_DEPLOYMENT_NAME,
         messages: [
           {
             role: "system",
@@ -55,5 +55,3 @@ class LLMService {
     }
   }
 }
-
-export default new LLMService();
